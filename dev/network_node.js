@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
 const uuid = require('uuid/v1');
 const port = process.argv[2];
+const rp = require('request-promise');
 
 const nodeAddress = uuid().split('-').join("");
 
@@ -60,7 +61,55 @@ app.get('/mine', function (req, res) {
     })
 });
 
+// Register a node and broadcast that node to the entire network
+app.post('/register-and-broadcast-node',function(req,res){
+    const newNodeUrl = req.body.newNodeUrl;
+
+    // adding the new node url to the Blockchain's NetworkNodes list
+    if (bitcoin.networkNodes.indexOf(newNodeUrl) == -1) bitcoin.networkNodes.push(newNodeUrl);
+
+    // Broadcast new node
+    const registerNodesPromises = []
+    bitcoin.networkNodes.forEach(networkNodeUrl => {
+        // Register Node Endpoint '/register-node'
+        const requestOptions = {
+            uri: networkNodeUrl + '/register-node',
+            method:'POST',
+            body:{ newNodeUrl:newNodeUrl },
+            json:true,
+        };
+
+        // Create requests of request.Promise type and push it to an array .
+        // Then all the requests will be sent asynchronously and handle further
+        registerNodesPromises.push(rp(requestOptions));
+    });
+    
+    Promise.all(registerNodesPromises)
+    .then(data =>{
+         const bulkRegisterOptions ={
+             uri:newNodeUrl + '/register-nodes-bulk',
+             method:'POST',
+             body:{allNetworkNodes:[ ...bitcoin.networkNodes , bitcoin.currentNodeUrl ]},
+             json:true
+         };
+         return rp(bulkRegisterOptions)
+    })
+    .then(data => {
+        res.json({note:"New node registered with network successfully"})
+    })
+
+});
+
+// Register a node in the network
+app.post('/register-node',function(req,res){
+
+});
+
+// Register multiple nodes at once
+app.post('/register-nodes-bulk',function(){
+
+});
 
 app.listen(port, function () {
-    console.log(`Listenning on port ${port}`);
+    console.log(`Listenning on port  ${port}`);
 });
