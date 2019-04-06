@@ -1,9 +1,16 @@
 const sha256 = require('sha256');
+const currentNodeUrl = process.argv[3];
 
 // BlockChain object
 function BlockChain() {
+    // Main Chain
     this.chain = [];
+    // Unvalidated pending transaction which will be validated on the creation of the new block
     this.pendingTransactions = [];
+    // Current Node URL 
+    this.currentNodeUrl = currentNodeUrl;
+    // List of all the nodes of this distributed network
+    this.networkNodes = [];
 
     // Creates Genesis Block trying with arbritary data
     this.createNewBlock(100,'0','0');

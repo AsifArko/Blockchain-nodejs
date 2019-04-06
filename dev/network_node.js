@@ -2,24 +2,26 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const Blockchain = require('./blockchain');
 const uuid = require('uuid/v1');
+const port = process.argv[2];
 
 const nodeAddress = uuid().split('-').join("");
 
 const bitcoin = new Blockchain();
 
+// Creating node app
 var app = express();
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 
 // Routes 
-
+// Get the BlockChain
 app.get('/blockchain', function (req, res) {
     res.send(bitcoin);
 });
 
+// Create a Transaction
 app.post('/transaction', function (req, res) {
     // First create new transaction 
     const blockIndex = bitcoin.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
@@ -28,6 +30,7 @@ app.post('/transaction', function (req, res) {
     });
 });
 
+// Mine block . Create block with proof of work
 app.get('/mine', function (req, res) {
     // Get the last block in the blockchain and extract the hash of this block
     const lastBlock = bitcoin.getLastBlock();
@@ -57,6 +60,7 @@ app.get('/mine', function (req, res) {
     })
 });
 
-app.listen(3000, function () {
-    console.log("Listenning on port 3000");
+
+app.listen(port, function () {
+    console.log(`Listenning on port ${port}`);
 });
