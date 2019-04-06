@@ -2,28 +2,27 @@ const BlockChain = require('./blockchain');
 
 const bitcoin = new BlockChain();
 
-bitcoin.createNewBlock(1111,'SYGDISHOSHFOUHSODSHFOUSH','IODJOFUHDUHFDFDFUHDH')
-bitcoin.createNewTransaction(100,"AUDHFOAUFHODUHFOUSDH","DOFHSODFHOSUDGHOSUGH")
+//  Proof of work test
+// let previousBlockHash = 'ABOCSABCOSAUCBOASUC'
+// let currentData = [{
+//     amount:10,
+//     sender:"AODHFOAFIHAODFUHUAFDHODUFH",
+//     recipient:"AOFHOADUFHDOUFH"
+// }];
+// let nonce = bitcoin.proofOfWork(previousBlockHash,currentData,0);
+// let hash = bitcoin.hashBlock(previousBlockHash,currentData,nonce);
+// bitcoin.createNewBlock(nonce,previousBlockHash,hash);
 
-const previousBlockHash = 'ONDAOFUAODFUHEJFNWEOU876'
-const currentBlockData = [
-{
-    amount:10,
-    sender:'FOSHOFSJNFOSUF34573ADADAD',
-    receipient:'DUFSIUSDFGSDIUGHDSIFUHSD'
-},
-{
-    amount:100,
-    sender:'AVADVSFOSHOFSJNFOSUF34573ADADAD',
-    receipient:'ADFADUFSIUSDFGSDIUGHDSIFUHSD'
-},
-{
-    amount:10,
-    sender:'FOSHOFADFAJNFOSUF34573ADADAD',
-    receipient:'AFDUFSIUSDFGSDIUGHDSIFUHSD'
-}
-]
+// let prevHash = hash
+// bitcoin.createNewTransaction(100,"rasel","arko")
+// let currenData = [{
+//     amount:10,
+//     sender:"AODHFO",
+//     recipient:"AOF"
+// }];
+// bitcoin.proofOfWork(prevHash,currenData,0);
+// hash = bitcoin.hashBlock(prevHash,currenData,nonce);
+// bitcoin.createNewBlock(nonce,prevHash,hash);
 
-bitcoin.createNewBlock(1111,'OHFOUHAODUFHOSUFHD','ADOFHOAUDFHOUDHFOUDH')
 
-console.log(bitcoin); 
+console.log(bitcoin)
