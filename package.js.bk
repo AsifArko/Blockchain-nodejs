@@ -1,7 +1,7 @@
 {
   "name": "blockchain",
   "version": "1.0.0",
-  "description": "",
+  "description": "simple blockchain service",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,21 +11,14 @@
     "node_4": "nodemon --watch dev -e js dev/network_node.js 3004 http://localhost:3004",
     "node_5": "nodemon --watch dev -e js dev/network_node.js 3005 http://localhost:3005"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/cryptocur/blockchain-js.git"
-  },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://gitlab.com/cryptocur/blockchain-js/issues"
-  },
-  "homepage": "https://gitlab.com/cryptocur/blockchain-js#readme",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "nodemon": "^1.18.10",
-    "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "ret": "^0.2.2",
     "sha256": "^0.2.0",
     "uuid": "^3.3.2"
   }

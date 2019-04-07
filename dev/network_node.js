@@ -102,12 +102,38 @@ app.post('/register-and-broadcast-node',function(req,res){
 
 // Register a node in the network
 app.post('/register-node',function(req,res){
+    const newNodeUrl = req.body.newNodeUrl;
+    const nodeNotAlreadyPresent = bitcoin.networkNodes.indexOf(newNodeUrl) == -1
+    const notCurrentNodeUrl = bitcoin.currentNodeUrl !== newNodeUrl;
+    
+    console.log(nodeNotAlreadyPresent)
+    console.log(notCurrentNodeUrl);
 
+    // If the new node url doesn't exists in the NetworkNodes array and current node url is not equal to the new node url
+    if(nodeNotAlreadyPresent && notCurrentNodeUrl) bitcoin.networkNodes.push(newNodeUrl);
+     
+    // Generate response and send
+    res.json({
+        note:"New node registered successfully ."
+    });
 });
 
 // Register multiple nodes at once
-app.post('/register-nodes-bulk',function(){
+app.post('/register-nodes-bulk',function(req,res){
+    // Register nodes bulk is only called after all the nodes are present for broadcasting purpose
+    const allNetworkNodes = req.body.allNetworkNodes;
+    
+    // Just push it to Blockchain's NetworkNodes array
+    allNetworkNodes.forEach(networkNodeUrl => {
+        const nodeNotAlreadyPresent = bitcoin.networkNodes.indexOf(networkNodeUrl) == -1
+        const notCurrentNodeUrl = bitcoin.currentNodeUrl !== networkNodeUrl;
+        if (nodeNotAlreadyPresent && notCurrentNodeUrl) bitcoin.networkNodes.push(networkNodeUrl);
+    });
 
+    // Generate appropiate response and send it
+    res.json({
+        note:"Bulk registration successful"
+    });
 });
 
 app.listen(port, function () {
