@@ -25,10 +25,15 @@ app.get('/blockchain', function (req, res) {
 // Create a Transaction
 app.post('/transaction', function (req, res) {
     // First create new transaction 
-    const blockIndex = bitcoin.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
+    const newTransaction = req.body;
+
+    // add this to pending transaction
+    const blockIndex = bitcoin.AddTransactionsToPendingTransactions(newTransaction);
+
+    // send a response
     res.json({
-        note: `Transaction will be added in block ${blockIndex} .`
-    });
+        note:`Transaction will be added on block ${blockIndex} .`
+    })
 });
 
 // Mine block . Create block with proof of work
@@ -135,6 +140,37 @@ app.post('/register-nodes-bulk',function(req,res){
         note:"Bulk registration successful"
     });
 });
+
+// Transaction Broadcast => Create transaction and then broadcast it with other networks
+app.post('/transaction/broadcast', function(req,res){
+    // Creates a transaction first
+    const newTransaction = bitcoin.createNewTransaction(req.body.amount,req.body.sender,req.body.recipient,req.body.transactionId)
+
+    // add the newly created transaction to pending transaction
+    bitcoin.AddTransactionsToPendingTransactions(newTransaction);
+
+    // ... and then Broadcast it to other networks
+    const requestPromises = []
+    bitcoin.networkNodes.forEach(networkNodeUrl => {
+        console.log(networkNodeUrl)
+        const requestOptions = {
+            uri:networkNodeUrl+"/transaction",
+            method:'POST',
+            body:newTransaction,
+            json:true
+        }
+        // create all the request and push
+        requestPromises.push(rp(requestOptions));
+        });
+        // execute all the request
+        Promise.all(requestPromises)
+        .then (data => {
+            res.json({
+                note:"Transaction create and broadcast is successful",
+            })
+        });
+        
+    });
 
 app.listen(port, function () {
     console.log(`Listenning on port  ${port}`);

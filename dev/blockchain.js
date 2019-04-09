@@ -1,4 +1,5 @@
 const sha256 = require('sha256');
+const uuid = require('uuid/v1');
 const currentNodeUrl = process.argv[3];
 
 // BlockChain object
@@ -46,25 +47,30 @@ BlockChain.prototype.createNewTransaction = function(amount , sender , recipient
     const newTransaction= {
         amount:amount,
         sender:sender,
-        recipient:recipient
-    }
+        recipient:recipient,
+        transactionId:uuid().split('-').join("")
+    };
     
     // Push to new transaction array
     // When one transaction is created it does not get a new block instantly . so its in the pending transaction property of the blockchain
-    this.pendingTransactions.push(newTransaction);
+    // this.pendingTransactions.push(newTransaction);
     
     // It has to wait untill the next block is created so it returns the ID of the next block
     // When this block is created the transaction 
-    return this.getLastBlock()['index'] + 1;
+    return newTransaction;
 }
 
 //  Hashes a block . Hashing the previousBlockHash+CurrentBlockData+nonces
 BlockChain.prototype.hashBlock = function(previousBlockHash , currentBlockData , nonce){
-    
     const data = previousBlockHash + nonce.toString() + JSON.stringify(currentBlockData);
     const hash = sha256(data);
     return hash;
 }
+
+BlockChain.prototype.AddTransactionsToPendingTransactions = function(transaction){
+    this.pendingTransactions.push(transaction)
+    return this.getLastBlock()["index"]+1;
+};
 
 // For creating a new block has to proof that the block is a valid block if not one can temper with the data
 // Proof of work validates a block 
