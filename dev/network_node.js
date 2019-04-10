@@ -73,7 +73,6 @@ app.get('/mine', function (req, res) {
     
     Promise.all(requestPromises)
     .then(data =>{
-        console.log('here I am')
         // Create new mining reward transaction as a reward for the miner
         // Generate request
         const requestOptions = {
@@ -86,7 +85,6 @@ app.get('/mine', function (req, res) {
             },
             json:true
         }
-        console.log('here again')
         //  send the request 
         return rp(requestOptions)
     })
