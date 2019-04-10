@@ -59,20 +59,21 @@ app.get('/mine', function (req, res) {
     
     // Broadcast the newly created Block
     const requestPromises = []
-    bitcoin.networkNodes.forEach(networkNodeUrl =>{
-        console.log(networkNodeUrl)
+    bitcoin.networkNodes.forEach( networkNode => {
         const requestOptions = {
-            uri:networkNodeUrl + '/receive-new-block',
+            uri:networkNode + '/receive-new-block',
             method:'POST',
             body:{newBlock:newBlock},
             json:true
-        }
-        
+        };
+         
         requestPromises.push(rp(requestOptions));
+        // console.log(requestPromises)
     })
     
     Promise.all(requestPromises)
     .then(data =>{
+        console.log('here I am')
         // Create new mining reward transaction as a reward for the miner
         // Generate request
         const requestOptions = {
@@ -81,10 +82,11 @@ app.get('/mine', function (req, res) {
             body:{
                 amount:12.5,
                 sender:"00",
-                recipient:nodeAddress,
-                json:true
-            }
+                recipient:nodeAddress
+            },
+            json:true
         }
+        console.log('here again')
         //  send the request 
         return rp(requestOptions)
     })
@@ -166,9 +168,6 @@ app.post('/register-node',function(req,res){
     const nodeNotAlreadyPresent = bitcoin.networkNodes.indexOf(newNodeUrl) == -1
     const notCurrentNodeUrl = bitcoin.currentNodeUrl !== newNodeUrl;
     
-    console.log(nodeNotAlreadyPresent)
-    console.log(notCurrentNodeUrl);
-
     // If the new node url doesn't exists in the NetworkNodes array and current node url is not equal to the new node url
     if(nodeNotAlreadyPresent && notCurrentNodeUrl) bitcoin.networkNodes.push(newNodeUrl);
      
