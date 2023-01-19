@@ -23,7 +23,7 @@
   "homepage": "https://gitlab.com/cryptocur/blockchain-js#readme",
   "dependencies": {
     "express": "^4.16.4",
-    "nodemon": "^1.18.10",
+    "nodemon": "^2.0.20",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "sha256": "^0.2.0",
